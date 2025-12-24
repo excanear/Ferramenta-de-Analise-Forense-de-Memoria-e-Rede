@@ -1,0 +1,392 @@
+<Window x:Class="ForensicCollector.UI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="DFIR Forensic Collector" Height="750" Width="1000" 
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5">
+    <Window.Resources>
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="#0078D4"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#005A9E"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#CCCCCC"/>
+                    <Setter Property="Foreground" Value="#666666"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <Style x:Key="ModernTextBox" TargetType="TextBox">
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="#0078D4"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ModernPasswordBox" TargetType="PasswordBox">
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="#0078D4"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#0078D4" CornerRadius="8" Padding="20,15" Margin="0,0,0,20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="🔍" FontSize="32" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock Text="DFIR Forensic Analysis Tool" FontSize="24" FontWeight="Bold" Foreground="White"/>
+                    <TextBlock Text="Digital Forensics &amp; Incident Response - Memory and Network Analysis" 
+                               FontSize="12" Foreground="#E0E0E0" Margin="0,5,0,0"/>
+                    <TextBlock Text="Desenvolvido por Escanearcpl" 
+                               FontSize="11" Foreground="#B0B0B0" Margin="0,3,0,0" FontStyle="Italic"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="15,0,0,0">
+                    <TextBlock Text="© 2025 Escanearcpl" 
+                               FontSize="11" Foreground="#E0E0E0" FontWeight="SemiBold"/>
+                    <TextBlock Text="GitHub: @Escanearcpl" 
+                               FontSize="10" Foreground="#B0B0B0" Margin="0,2,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Main Content -->
+        <TabControl Grid.Row="1" Background="White" BorderThickness="0">
+            <!-- Collector Tab -->
+            <TabItem Header="📦 Coletor de Evidências" FontSize="14" FontWeight="SemiBold">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid Margin="20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Output Settings -->
+                        <GroupBox Grid.Row="0" Header="📁 Configurações de Saída" Padding="15" Margin="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="Arquivo de Saída (.fpkg):" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <Grid Margin="0,0,0,15">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="OutputPathTextBox" 
+                                             Style="{StaticResource ModernTextBox}"
+                                             Text="C:\Temp\evidencias.fpkg"/>
+                                    <Button Grid.Column="1" Content="📂 Procurar" 
+                                            Style="{StaticResource ModernButton}"
+                                            Click="BrowseOutputPath_Click"
+                                            Margin="10,0,0,0"/>
+                                </Grid>
+
+                                <TextBlock Text="Senha de Criptografia:" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <PasswordBox x:Name="PasswordBox" 
+                                                 Style="{StaticResource ModernPasswordBox}"/>
+                                    <CheckBox x:Name="ShowPasswordCheckBox" 
+                                              Grid.Column="1"
+                                              Content="👁️ Mostrar" 
+                                              VerticalAlignment="Center"
+                                              Margin="10,0,0,0"
+                                              Checked="ShowPassword_Changed"
+                                              Unchecked="ShowPassword_Changed"/>
+                                </Grid>
+                                <TextBox x:Name="PasswordTextBox" 
+                                         Style="{StaticResource ModernTextBox}"
+                                         Visibility="Collapsed"
+                                         Margin="0,0,0,10"/>
+                            </StackPanel>
+                        </GroupBox>
+
+                        <!-- Collection Options -->
+                        <GroupBox Grid.Row="1" Header="⚙️ Opções de Coleta" Padding="15" Margin="0,0,0,15">
+                            <StackPanel>
+                                <CheckBox x:Name="ExportJsonCheckBox" Content="💾 Exportar JSON (Debug)" 
+                                          FontSize="13" Margin="0,0,0,10" IsChecked="True"/>
+                                <CheckBox x:Name="NoEncryptCheckBox" Content="🔓 Sem Criptografia (apenas HMAC)"
+                                          FontSize="13" Margin="0,0,0,10"/>
+                                <CheckBox x:Name="UseHmacCheckBox" Content="✅ Usar HMAC para Integridade"
+                                          FontSize="13" Margin="0,0,0,10" IsChecked="True"/>
+                            </StackPanel>
+                        </GroupBox>
+
+                        <!-- Evidence Selection -->
+                        <GroupBox Grid.Row="2" Header="📋 Tipos de Evidências a Coletar" Padding="15" Margin="0,0,0,15">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                    <CheckBox x:Name="CollectProcessesCheckBox" Content="🔍 Processos" 
+                                              FontSize="13" Margin="0,0,0,8" IsChecked="True"/>
+                                    <CheckBox x:Name="CollectConnectionsCheckBox" Content="🌐 Conexões de Rede" 
+                                              FontSize="13" Margin="0,0,0,8" IsChecked="True"/>
+                                    <CheckBox x:Name="CollectRegistryCheckBox" Content="📝 Registro (RunKeys/Services)" 
+                                              FontSize="13" Margin="0,0,0,8" IsChecked="True"/>
+                                    <CheckBox x:Name="CollectTasksCheckBox" Content="⏰ Tarefas Agendadas" 
+                                              FontSize="13" Margin="0,0,0,8" IsChecked="True"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                    <CheckBox x:Name="CollectWmiCheckBox" Content="📡 Assinaturas WMI" 
+                                              FontSize="13" Margin="0,0,0,8" IsChecked="True"/>
+                                    <CheckBox x:Name="CollectStartupCheckBox" Content="🚀 Itens de Startup" 
+                                              FontSize="13" Margin="0,0,0,8" IsChecked="True"/>
+                                    <CheckBox x:Name="CollectIfeoCheckBox" Content="🔧 IFEO (Image File Execution)" 
+                                              FontSize="13" Margin="0,0,0,8" IsChecked="True"/>
+                                    <CheckBox x:Name="CollectAppInitCheckBox" Content="📚 AppInit DLLs" 
+                                              FontSize="13" Margin="0,0,0,8" IsChecked="True"/>
+                                </StackPanel>
+                            </Grid>
+                        </GroupBox>
+
+                        <!-- Signature Options -->
+                        <GroupBox Grid.Row="3" Header="✍️ Assinatura Digital (Opcional)" Padding="15" Margin="0,0,0,15">
+                            <StackPanel>
+                                <CheckBox x:Name="SignPackageCheckBox" Content="📝 Assinar Pacote com Certificado Digital"
+                                          FontSize="13" Margin="0,0,0,10"
+                                          Checked="SignPackage_Changed"
+                                          Unchecked="SignPackage_Changed"/>
+                                
+                                <StackPanel x:Name="SignaturePanel" IsEnabled="False">
+                                    <TextBlock Text="Arquivo PFX:" FontWeight="SemiBold" Margin="0,5,0,5"/>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox x:Name="PfxPathTextBox" Style="{StaticResource ModernTextBox}"/>
+                                        <Button Grid.Column="1" Content="📂 Procurar"
+                                                Style="{StaticResource ModernButton}"
+                                                Click="BrowsePfxPath_Click"
+                                                Margin="10,0,0,0"/>
+                                    </Grid>
+
+                                    <TextBlock Text="Senha do PFX:" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                    <PasswordBox x:Name="PfxPasswordBox" 
+                                                 Style="{StaticResource ModernPasswordBox}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </GroupBox>
+
+                        <!-- Action Button -->
+                        <StackPanel Grid.Row="4" VerticalAlignment="Top">
+                            <Button x:Name="CollectButton"
+                                    Content="🚀 INICIAR COLETA DE EVIDÊNCIAS"
+                                    Style="{StaticResource ModernButton}"
+                                    Click="CollectButton_Click"
+                                    Height="50"
+                                    FontSize="16"
+                                    Background="#107C10"/>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Analyzer Tab -->
+            <TabItem Header="📊 Analisador de Evidências" FontSize="14" FontWeight="SemiBold">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid Margin="20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Input Settings -->
+                        <GroupBox Grid.Row="0" Header="📥 Arquivo de Entrada" Padding="15" Margin="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="Pacote de Evidências (.fpkg):" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <Grid Margin="0,0,0,15">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="InputPackageTextBox" Style="{StaticResource ModernTextBox}"/>
+                                    <Button Grid.Column="1" Content="📂 Procurar"
+                                            Style="{StaticResource ModernButton}"
+                                            Click="BrowseInputPackage_Click"
+                                            Margin="10,0,0,0"/>
+                                </Grid>
+
+                                <TextBlock Text="Senha do Pacote:" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <PasswordBox x:Name="AnalyzePasswordBox" 
+                                             Style="{StaticResource ModernPasswordBox}"/>
+                            </StackPanel>
+                        </GroupBox>
+
+                        <!-- Output Settings -->
+                        <GroupBox Grid.Row="1" Header="📄 Relatório de Saída" Padding="15" Margin="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="Arquivo PDF de Relatório:" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="OutputPdfTextBox" 
+                                             Style="{StaticResource ModernTextBox}"
+                                             Text="C:\Temp\relatorio_forense.pdf"/>
+                                    <Button Grid.Column="1" Content="📂 Procurar"
+                                            Style="{StaticResource ModernButton}"
+                                            Click="BrowseOutputPdf_Click"
+                                            Margin="10,0,0,0"/>
+                                </Grid>
+                            </StackPanel>
+                        </GroupBox>
+
+                        <!-- Analysis Options -->
+                        <GroupBox Grid.Row="2" Header="⚙️ Opções de Análise" Padding="15" Margin="0,0,0,15">
+                            <StackPanel>
+                                <CheckBox x:Name="ExportIocJsonCheckBox" Content="💾 Exportar IOCs (JSON)"
+                                          FontSize="13" Margin="0,0,0,10" IsChecked="True"/>
+                                <TextBox x:Name="IocJsonPathTextBox" 
+                                         Style="{StaticResource ModernTextBox}"
+                                         Text="C:\Temp\iocs.json"
+                                         Margin="25,0,0,15"/>
+                                
+                                <CheckBox x:Name="ExportIocCsvCheckBox" Content="📊 Exportar IOCs (CSV)"
+                                          FontSize="13" Margin="0,0,0,10" IsChecked="True"/>
+                                <TextBox x:Name="IocCsvPathTextBox" 
+                                         Style="{StaticResource ModernTextBox}"
+                                         Text="C:\Temp\iocs.csv"
+                                         Margin="25,0,0,15"/>
+                                
+                                <CheckBox x:Name="OfflineModeCheckBox" Content="🔌 Modo Offline (sem consultas DNS/WHOIS)"
+                                          FontSize="13" Margin="0,0,0,10"/>
+                            </StackPanel>
+                        </GroupBox>
+
+                        <!-- Action Button -->
+                        <StackPanel Grid.Row="3" VerticalAlignment="Top">
+                            <Button x:Name="AnalyzeButton"
+                                    Content="🔍 ANALISAR EVIDÊNCIAS E GERAR RELATÓRIO"
+                                    Style="{StaticResource ModernButton}"
+                                    Click="AnalyzeButton_Click"
+                                    Height="50"
+                                    FontSize="16"
+                                    Background="#8B5CF6"/>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Log Tab -->
+            <TabItem Header="📋 Log de Execução" FontSize="14" FontWeight="SemiBold">
+                <Grid Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Border Grid.Row="0" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="5" Background="#1E1E1E">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <TextBox x:Name="LogTextBox"
+                                     IsReadOnly="True"
+                                     TextWrapping="Wrap"
+                                     FontFamily="Consolas"
+                                     FontSize="12"
+                                     Foreground="#00FF00"
+                                     Background="#1E1E1E"
+                                     BorderThickness="0"
+                                     Padding="10"
+                                     VerticalScrollBarVisibility="Auto"/>
+                        </ScrollViewer>
+                    </Border>
+                    
+                    <Button Grid.Row="1" 
+                            Content="🗑️ Limpar Log"
+                            Style="{StaticResource ModernButton}"
+                            Click="ClearLog_Click"
+                            HorizontalAlignment="Left"
+                            Margin="0,10,0,0"
+                            Background="#DC3545"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="2" Background="White" BorderBrush="#CCCCCC" BorderThickness="0,1,0,0" Padding="15,10" Margin="0,20,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock x:Name="StatusTextBlock" 
+                           Grid.Column="0"
+                           Text="✅ Pronto" 
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"/>
+                
+                <ProgressBar x:Name="ProgressBar"
+                             Grid.Column="1"
+                             Height="20"
+                             Margin="20,0"
+                             Visibility="Collapsed"/>
+                
+                <TextBlock Grid.Column="2" 
+                           Foreground="#666666"
+                           FontSize="11"
+                           VerticalAlignment="Center">
+                    <Run Text="v1.0.0 | "/>
+                    <Run Text="Criado por " FontWeight="SemiBold"/>
+                    <Run Text="Escanearcpl" FontWeight="Bold" Foreground="#0078D4"/>
+                </TextBlock>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
