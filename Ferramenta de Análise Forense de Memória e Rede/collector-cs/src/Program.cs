@@ -16,6 +16,10 @@ namespace ForensicCollector;
 
 class Program
 {
+    [DllImport("kernel32.dll")]
+    private static extern bool AttachConsole(int dwProcessId);
+    private const int ATTACH_PARENT_PROCESS = -1;
+
     [STAThread]
     static int Main(string[] args)
     {
@@ -28,8 +32,12 @@ class Program
             return 0;
         }
         
-        // CLI mode - set console encoding only when running in CLI
-        Console.OutputEncoding = Encoding.UTF8;
+        // CLI mode: WinExe não tem console próprio; anexa ao console do processo
+        // pai (p/ a saída aparecer quando executado de um terminal) e define
+        // UTF-8 de forma tolerante — set OutputEncoding sem console lança
+        // IOException e derrubava o modo CLI.
+        AttachConsole(ATTACH_PARENT_PROCESS);
+        try { Console.OutputEncoding = Encoding.UTF8; } catch (IOException) { }
         
         if (args.Length < 2 || args.Contains("--help") || args.Contains("-h"))
         {
